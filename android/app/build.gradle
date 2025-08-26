@@ -84,6 +84,8 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+
+        
     }
     signingConfigs {
         debug {
@@ -117,3 +119,9 @@ dependencies {
         implementation jscFlavor
     }
 }
+
+
+project.ext.vectoricons = [
+    iconFontNames: [ 'MaterialIcons.ttf', 'EvilIcons.ttf','FontAwesome5.ttf', 'FontAwesome6Brands.ttf', 'MaterialCommunityIcons.ttf','FontAwesome.ttf','fontisto.ttf','Feather.ttf','Octicons.ttf', 'AntDesign.ttf']
+]
+apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")

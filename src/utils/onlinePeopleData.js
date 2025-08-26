@@ -1,0 +1,57 @@
+export const onlinePeople = [
+    {
+        id: '1',
+        name: 'Your note',
+        profilePic: 'https://randomuser.me/api/portraits/men/1.jpg',
+        note: 'Share a note',
+    },
+    {
+        id: '2',
+        name: 'DIGIUNIVERSE',
+        profilePic: 'https://randomuser.me/api/portraits/men/45.jpg',
+        note: '"Trust isn\'t claimed. It\'s earned - daily."',
+        isOnline: true,
+    },
+    {
+        id: '3',
+        name: 'Meet Bhingradiya',
+        profilePic: 'https://randomuser.me/api/portraits/men/66.jpg',
+        note: 'Was listening to music 🎧',
+        isOnline: true,
+    },
+    {
+        id: '4',
+        name: 'Jay Shree Ram',
+        profilePic: 'https://randomuser.me/api/portraits/men/23.jpg',
+        note: '🚩|| Jay Shree Ram ||🚩',
+        isOnline: true,
+    },
+    {
+        id: '5',
+        name: 'Shruti Sharma',
+        profilePic: 'https://randomuser.me/api/portraits/women/12.jpg',
+        note: '💫 Just chilling 💫',
+        isOnline: false,
+    },
+    {
+        id: '6',
+        name: 'Rahul Verma',
+        profilePic: 'https://randomuser.me/api/portraits/men/17.jpg',
+        note: '⚡ New project launch soon!',
+        isOnline: true,
+    },
+    {
+        id: '7',
+        name: 'Ananya Gupta',
+        profilePic: 'https://randomuser.me/api/portraits/women/42.jpg',
+        note: '🌸 Feeling grateful 🌸',
+        isOnline: true,
+    },
+    {
+        id: '8',
+        name: 'Rohan Mehta',
+        profilePic: 'https://randomuser.me/api/portraits/men/19.jpg',
+        note: '🏋️ Just finished workout!',
+        isOnline: false,
+    },
+];
