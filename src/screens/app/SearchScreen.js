@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
     SafeAreaView,
     View,
@@ -14,11 +14,12 @@ import InputOfSearchScreen from '../../components/InputOfSearchScreen';
 import { usersData } from '../../utils/usersData';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Icon from 'react-native-vector-icons/FontAwesome'
+import { useFocusEffect } from '@react-navigation/native';
 
 const SearchScreen = () => {
     const [searchText, setSearchText] = useState('');
     const [searching, setSearching] = useState(false);
-    const dummyData = Array.from({ length: 80 }, (_, i) => ({
+    const dummyData = Array.from({ length: 180 }, (_, i) => ({
         id: String(i + 1),
         uri: `https://picsum.photos/300?random=${i}`,
     }));
@@ -42,9 +43,19 @@ const SearchScreen = () => {
             );
             setFilteredData(filteredData)
         }
-
     }, [searching, searchText])
 
+    useFocusEffect(
+        useCallback(() => {
+            const filteredData = dummyData.filter(item =>
+                item.uri.toLowerCase().includes(searchText.toLowerCase())
+            );
+            setFilteredData(filteredData)
+
+            setSearching(false)
+            setSearchText('')
+        }, [])
+    );
 
     return (
         <SafeAreaView style={styles.SafeAreaViewContainer} edges={['top', 'left', 'right']}>

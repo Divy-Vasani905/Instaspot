@@ -9,8 +9,6 @@ import ReelsScreen from '../screens/app/ReelsScreen';
 import ProfileScreen from '../screens/app/ProfileScreen';
 import NewActivityScreen from '../screens/app/NewActivityScreen';
 
-import ProfileDrawerNavigator from './ProfileDrawerNavigator';
-
 // Icons
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Foundation from 'react-native-vector-icons/Foundation';
@@ -20,6 +18,8 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 // Local assets
 import video_play from '../assets/image/video-play-icon/video-play.png';
 import video_play_fill from '../assets/image/video-play-icon/video-play-fill.png';
+import Gallery from '../screens/app/Gallery';
+import MainScreen from '../screens/app/MainScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -71,8 +71,8 @@ function MainTabNavigator() {
 
             {/* New Activity (hide tab bar here) */}
             <Tab.Screen
-                name="NewActivityScreen"
-                component={NewActivityScreen}
+                name="GalleryScreen"
+                component={Gallery}
                 options={{
                     tabBarStyle: { display: 'none' },
                     tabBarIcon: () => (

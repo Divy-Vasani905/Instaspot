@@ -3,7 +3,7 @@ export const stories = [
         id: 1,
         username: 'your_story',
         profilePic: 'https://randomuser.me/api/portraits/men/1.jpg',
-        mediaUrl: 'https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4',
+        mediaUrl: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
         isUser: true,
     },
     {
@@ -16,7 +16,7 @@ export const stories = [
             username: 'travel_with_sam',
             profilePic: 'https://randomuser.me/api/portraits/men/32.jpg',
         },
-        mediaUrl: 'https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4',
+        mediaUrl: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
     },
     {
         id: 3,

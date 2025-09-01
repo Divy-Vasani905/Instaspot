@@ -1,6 +1,7 @@
 apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
+apply from: "../../node_modules/react-native-vector-image/strip_svgs.gradle"
 
 /**
  * This is the configuration block to customize your React Native Android app.
@@ -85,7 +86,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        
+        multiDexEnabled true
     }
     signingConfigs {
         debug {
@@ -112,6 +113,7 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
+    implementation 'androidx.multidex:multidex:2.0.1'   
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
@@ -120,8 +122,21 @@ dependencies {
     }
 }
 
-
 project.ext.vectoricons = [
-    iconFontNames: [ 'MaterialIcons.ttf', 'EvilIcons.ttf','FontAwesome5.ttf', 'FontAwesome6Brands.ttf', 'MaterialCommunityIcons.ttf','FontAwesome.ttf','fontisto.ttf','Feather.ttf','Octicons.ttf', 'AntDesign.ttf']
+    iconFontNames: [ 
+        'AntDesign.ttf',
+        'EvilIcons.ttf',
+        'Entypo.ttf',
+        'Feather.ttf', 
+        'FontAwesome5.ttf', 
+        'FontAwesome6Brands.ttf', 
+        'Foundation.ttf', 
+        'FontAwesome.ttf',
+        'fontisto.ttf', 
+        'Ionicons.ttf', 
+        'MaterialCommunityIcons.ttf',
+        'MaterialIcons.ttf', 
+        'Octicons.ttf', 
+        ]
 ]
-apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
+// apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")

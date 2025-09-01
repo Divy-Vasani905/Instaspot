@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { stories } from '../utils/storyData';
 import Icon from 'react-native-vector-icons/Entypo';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const StoryCard = ({ navigation }) => {
     return (
@@ -20,7 +21,7 @@ const StoryCard = ({ navigation }) => {
                                 style={styles.addIconContainer}
                                 onPress={() => { navigation.navigate('NewActivityScreen', { activeFor: 'Story' }) }}
                             >
-                                <Icon name="plus" size={20} color="#000000" />
+                                <AntDesign name="plus" size={20} color="#000000" />
                             </TouchableOpacity>
                         )}
                     </View>

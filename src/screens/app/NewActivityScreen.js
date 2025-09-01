@@ -1,3 +1,4 @@
+// NewActivityScreen.js
 import React, { useEffect, useState, useRef } from "react";
 import {
     StyleSheet,
@@ -9,40 +10,58 @@ import {
     Platform,
     PermissionsAndroid,
     SafeAreaView,
-    Image,
 } from "react-native";
 import {
-    Camera,
     useCameraDevice,
     useCameraPermission
 } from "react-native-vision-camera";
-import { CameraRoll } from "@react-native-camera-roll/camera-roll";
+import PagerView from "react-native-pager-view";
 import { launchImageLibrary } from "react-native-image-picker";
+
 import Ionicons from "react-native-vector-icons/Ionicons";
+
 import CenteredTabs from "../../components/CenteredTabs";
+import NewPost from "../../components/NewPost";
+import NewStory from "../../components/NewStory";
+import NewReel from "../../components/NewReel";
+
+const pages = ["POST", "STORY", "REEL", "LIVE"];
 
 const NewActivityScreen = ({ navigation, route }) => {
     const [isPermissionLoading, setIsPermissionLoading] = useState(true);
     const [cameraSideBack, setCameraSideBack] = useState(true)
-    const device = useCameraDevice(cameraSideBack ? 'back' : 'front', {
-        physicalDevices: [
-            'ultra-wide-angle-camera',
-            'wide-angle-camera',
-            'telephoto-camera'
-        ]
-    })
+    const device = useCameraDevice(cameraSideBack ? 'back' : 'front')
     const { hasPermission, requestPermission } = useCameraPermission();
-    const [photoUri, setPhotoUri] = useState(null);
+    const [photoUri, setPhotoUri] = useState('');
     const cameraRef = useRef(null);
+    const pagerRef = useRef(null);
 
-    const [activeFor, setActiveFor] = useState(route?.params?.activeFor)
-    console.log('activeFor', activeFor)
+    const [activeFor, setActiveFor] = useState(route?.params?.activeFor || "POST");
+
+    // Sync pager when tab changes
+    useEffect(() => {
+        const index = pages.findIndex(p => p.toLowerCase() === activeFor?.toLowerCase());
+        if (index >= 0) {
+            pagerRef.current?.setPage(index);
+        }
+    }, [activeFor]);
+
+    useEffect(() => {
+        if (activeFor === 'POST' && activeFor !== route?.params?.activeFor) {
+            navigation.navigate('Gallery', { activeFor: activeFor })
+        }
+    }, [activeFor]);
+
+    // Handle pager swipe
+    const onPageSelected = (e) => {
+        const index = e.nativeEvent.position;
+        setActiveFor(pages[index]);
+    };
 
     useEffect(() => {
         const checkAndRequestPermissions = async () => {
             setIsPermissionLoading(true);
             try {
-                // For Android, also check native permissions as fallback
                 if (Platform.OS === 'android') {
                     const cameraGranted = await PermissionsAndroid.check(
                         PermissionsAndroid.PERMISSIONS.CAMERA
@@ -61,7 +80,6 @@ const NewActivityScreen = ({ navigation, route }) => {
                         await requestPermission();
                     }
                 } else {
-                    // For iOS, use Vision Camera permission
                     if (!hasPermission) {
                         await requestPermission();
                     }
@@ -75,12 +93,18 @@ const NewActivityScreen = ({ navigation, route }) => {
         checkAndRequestPermissions();
     }, [hasPermission, requestPermission]);
 
-    // Handle close
+    useEffect(() => {
+        if (photoUri && photoUri !== '') {
+            setTimeout(() => {
+                navigation.navigate('EditActivityScreen', { photoUri: photoUri })
+            }, 0)
+        }
+    }, [photoUri])
+
     const handleClose = () => {
         navigation?.goBack();
     };
 
-    // Handle permission request
     const handleRequestPermission = async () => {
         try {
             const granted = await requestPermission();
@@ -107,7 +131,6 @@ const NewActivityScreen = ({ navigation, route }) => {
         }
     };
 
-    // Show loading state while checking permissions
     if (isPermissionLoading) {
         return (
             <SafeAreaView style={styles.SafeAreaViewContainer}>
@@ -129,7 +152,6 @@ const NewActivityScreen = ({ navigation, route }) => {
         );
     }
 
-    // Show permission request screen
     if (!hasPermission) {
         return (
             <SafeAreaView style={styles.SafeAreaViewContainer}>
@@ -167,7 +189,6 @@ const NewActivityScreen = ({ navigation, route }) => {
         );
     }
 
-    // Show error if no camera device available
     if (device == null) {
         return (
             <SafeAreaView style={styles.SafeAreaViewContainer}>
@@ -199,7 +220,7 @@ const NewActivityScreen = ({ navigation, route }) => {
 
     const pickFromGallery = async () => {
         const result = await launchImageLibrary({
-            mediaType: "photo",
+            mediaType: "mixed",
             quality: 1,
         });
         if (result.assets && result.assets.length > 0) {
@@ -217,12 +238,6 @@ const NewActivityScreen = ({ navigation, route }) => {
                 });
                 console.log("Captured photo:", photo.path);
                 setPhotoUri("file://" + photo.path);
-                // await CameraRoll.save(`file://${photo.path}`, {
-                //     type: 'photo',
-                //     album: "InstaspotPics",
-                // })
-                // Navigate to preview/edit screen with photo
-                // navigation.navigate('PhotoPreview', { photoPath: photo.path });
             }
         } catch (error) {
             console.error('Error taking photo:', error);
@@ -230,65 +245,90 @@ const NewActivityScreen = ({ navigation, route }) => {
         }
     }
 
-    // Main camera screen
     return (
         <SafeAreaView style={styles.SafeAreaViewContainer}>
             <View style={styles.container}>
-                {/* Header */}
-                <View style={styles.header}>
-                    <View style={styles.headerLeft}>
-                        <TouchableOpacity onPress={handleClose}>
-                            <Ionicons name="close-outline" size={30} color="#fff" />
-                        </TouchableOpacity>
-                        <Text style={styles.headerTitle}>New {activeFor}</Text>
+
+                <PagerView
+                    ref={pagerRef}
+                    style={{ flex: 1 }}
+                    initialPage={pages.findIndex(p => p.toLowerCase() === activeFor.toLowerCase())}
+                    onPageSelected={onPageSelected}
+                    scrollEnabled={false}
+                >
+                    <View key="POST" style={{ flex: 1 }}>
+                        {activeFor === "POST" &&
+                            <NewPost
+                                photoUri={photoUri}
+                                device={device}
+                                cameraRef={cameraRef}
+                                handleClose={handleClose}
+                                capturePhoto={capturePhoto}
+                                setPhotoUri={setPhotoUri}
+                            />
+                        }
                     </View>
 
-                    <TouchableOpacity>
-                        <Text style={styles.nextButton}>Next</Text>
-                    </TouchableOpacity>
-                </View>
+                    <View key="STORY" style={{ flex: 1 }}>
+                        {activeFor === "STORY" &&
+                            <NewStory
+                                photoUri={photoUri}
+                                device={device}
+                                cameraRef={cameraRef}
+                                handleClose={handleClose}
+                                capturePhoto={capturePhoto}
+                                setPhotoUri={setPhotoUri}
+                            />
+                        }
+                    </View>
 
-                {/* Camera */}
-                <View style={styles.cameraContainer}>
-                    {photoUri ? (
-                        <Image
-                            source={{ uri: photoUri }}
-                            style={StyleSheet.absoluteFill}
-                        />
-                    ) : (
-                        <Camera
-                            ref={cameraRef}
-                            style={StyleSheet.absoluteFill}
-                            device={device}
-                            isActive={true}
-                            photo={true}
-                        />
-                    )}
-                </View>
+                    <View key="REEL" style={{ flex: 1 }}>
+                        {activeFor === "REEL" &&
+                            <NewReel
+                                photoUri={photoUri}
+                                device={device}
+                                cameraRef={cameraRef}
+                                handleClose={handleClose}
+                                capturePhoto={capturePhoto}
+                                setPhotoUri={setPhotoUri}
+                            />
+                        }
+                    </View>
 
-                {/* Bottom Capture Button */}
+                    <View key="LIVE" style={{ flex: 1 }}>
+                        {activeFor === "LIVE" &&
+                            <Text style={{ color: "white", fontSize: 20 }}>Live Page</Text>
+                        }
+                    </View>
+                </PagerView>
+
                 <View style={styles.controlsContainer}>
-                    {photoUri &&
+                    {(photoUri && photoUri !== '') &&
                         <>
-                            <TouchableOpacity
+                            {/* <TouchableOpacity
                                 onPress={() => setPhotoUri(null)}
                                 style={styles.captureButton}
                             >
-                                <Text style={{ color: '#fff' }}>
-                                    Retake
-                                </Text>
-                            </TouchableOpacity>
+                                <Text style={{ color: '#fff' }}>Retake</Text>
+                            </TouchableOpacity> */}
+
+                            <CenteredTabs
+                                photoUri={photoUri}
+                                pickFromGallery={pickFromGallery}
+                                activeFor={activeFor}
+                                setActiveFor={setActiveFor}
+                            />
                         </>
                     }
 
                     {!photoUri &&
                         <>
-                            <TouchableOpacity
+                            {/* <TouchableOpacity
                                 style={styles.captureButton}
                                 onPress={() => capturePhoto()}
                             >
                                 <View style={styles.captureButtonInner} />
-                            </TouchableOpacity>
+                            </TouchableOpacity> */}
 
                             <CenteredTabs
                                 photoUri={photoUri}

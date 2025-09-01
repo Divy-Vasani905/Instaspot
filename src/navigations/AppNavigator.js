@@ -19,6 +19,11 @@ import NewMessageScreen from '../screens/app/NewMessageScreen';
 import ChatScreen from '../screens/app/ChatScreen';
 import ChatDetailsScreen from '../screens/app/ChatDetailsScreen';
 import ReelsView from '../components/ReelsView';
+import Privacy_SafetyOfMessageScreen from '../screens/app/Privacy_SafetyOfMessageScreen';
+import Gallery from '../screens/app/Gallery';
+import NewActivityScreen from '../screens/app/NewActivityScreen';
+import EditActivityScreen from '../screens/app/EditActivityScreen';
+import CenteredTabsWithPages from '../screens/app/CenteredTabsWithPages';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,12 +33,17 @@ const AppNavigator = () => {
             initialRouteName="Home"
             screenOptions={{ headerShown: false, orientation: 'portrait' }}
         >
+            <Stack.Screen name="CenteredTabsWithPages" component={CenteredTabsWithPages} />
+            <Stack.Screen name="Gallery" component={Gallery} />
+            <Stack.Screen name="EditActivityScreen" component={EditActivityScreen} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Register" component={RegisterScreen} />
             <Stack.Screen name="Home" component={MainTabNavigator} />
+            <Stack.Screen name="NewActivityScreen" component={NewActivityScreen} />
             <Stack.Screen name="NotificationScreen" component={NotificationScreen} />
             <Stack.Screen name="MessageScreen" component={MessageScreen} />
             <Stack.Screen name="NewMessageScreen" component={NewMessageScreen} />
+            <Stack.Screen name="Privacy_Safety" component={Privacy_SafetyOfMessageScreen} />
             <Stack.Screen name="ChatScreen" component={ChatScreen} />
             <Stack.Screen name="ChatDetailsScreen" component={ChatDetailsScreen} />
             <Stack.Screen name="OthersProfileScreen" component={OthersProfileScreen} />

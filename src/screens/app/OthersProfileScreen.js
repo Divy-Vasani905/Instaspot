@@ -12,8 +12,8 @@ const OthersProfileScreen = ({ route, navigation }) => {
     return (
         <SafeAreaView style={styles.SafeAreaViewContainer} edges={['top', 'left', 'right']}>
             <View style={styles.container}>
-                <HeaderOfProfileScreen username={item?.user?.username} />
-                <ProfileDetails userData={item?.user} />
+                <HeaderOfProfileScreen username={item?.user?.username || item?.username} />
+                <ProfileDetails userData={item?.user || item} />
                 <Highlight otherUser={true} />
                 <View style={{ height: 460, marginBottom: 70 }}>
                     <ProfileTabNavigator />

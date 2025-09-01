@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import {
     View,
@@ -6,6 +7,7 @@ import {
     Image,
     Dimensions,
     Text,
+    TouchableOpacity,
 } from 'react-native';
 
 const { width } = Dimensions.get('window');
@@ -16,6 +18,8 @@ const BIG_HEIGHT = SMALL_SIZE * 2 + 4;
 import Entypo from 'react-native-vector-icons/Entypo';
 
 const RenderDataOnSearchScreen = ({ filteredData, searching }) => {
+    const navigation = useNavigation();
+
     const createLayoutData = (data) => {
         const layout = [];
         for (let i = 0; i < data.length; i += 5) {
@@ -37,7 +41,10 @@ const RenderDataOnSearchScreen = ({ filteredData, searching }) => {
                     keyExtractor={(_, idx) => idx.toString()}
                     renderItem={({ item, index }) => {
                         return (
-                            <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10, paddingHorizontal: 10 }}>
+                            <TouchableOpacity
+                                style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10, paddingHorizontal: 10 }}
+                                onPress={() => { navigation.navigate('OthersProfileScreen', { item: item }) }}
+                            >
                                 <View>
                                     <Image source={{ uri: item.profilePic }} style={{ width: 50, height: 50, borderRadius: 50, marginRight: 10 }} />
                                 </View>
@@ -56,7 +63,7 @@ const RenderDataOnSearchScreen = ({ filteredData, searching }) => {
                                         </Text>
                                     </View>
                                 </View>
-                            </View >
+                            </TouchableOpacity>
                         );
                     }}
                     showsVerticalScrollIndicator={false}
@@ -74,27 +81,47 @@ const RenderDataOnSearchScreen = ({ filteredData, searching }) => {
                                     <>
                                         <View style={styles.smallContainer}>
                                             <View style={styles.smallRow}>
-                                                <Image source={{ uri: item[0].uri }} style={styles.smallImage} />
-                                                <Image source={{ uri: item[1].uri }} style={styles.smallImage} />
+                                                <TouchableOpacity>
+                                                    <Image source={{ uri: item[0].uri }} style={styles.smallImage} />
+                                                </TouchableOpacity>
+                                                <TouchableOpacity>
+                                                    <Image source={{ uri: item[1].uri }} style={styles.smallImage} />
+                                                </TouchableOpacity>
                                             </View>
                                             <View style={styles.smallRow}>
-                                                <Image source={{ uri: item[2].uri }} style={styles.smallImage} />
-                                                <Image source={{ uri: item[3].uri }} style={styles.smallImage} />
+                                                <TouchableOpacity>
+                                                    <Image source={{ uri: item[2].uri }} style={styles.smallImage} />
+                                                </TouchableOpacity>
+                                                <TouchableOpacity>
+                                                    <Image source={{ uri: item[3].uri }} style={styles.smallImage} />
+                                                </TouchableOpacity>
                                             </View>
                                         </View>
-                                        <Image source={{ uri: item[4].uri }} style={styles.bigImage} />
+                                        <TouchableOpacity>
+                                            <Image source={{ uri: item[4].uri }} style={styles.bigImage} />
+                                        </TouchableOpacity>
                                     </>
                                 ) : (
                                     <>
-                                        <Image source={{ uri: item[4].uri }} style={styles.bigImage} />
+                                        <TouchableOpacity>
+                                            <Image source={{ uri: item[4].uri }} style={styles.bigImage} />
+                                        </TouchableOpacity>
                                         <View style={styles.smallContainer}>
                                             <View style={styles.smallRow}>
-                                                <Image source={{ uri: item[0].uri }} style={styles.smallImage} />
-                                                <Image source={{ uri: item[1].uri }} style={styles.smallImage} />
+                                                <TouchableOpacity>
+                                                    <Image source={{ uri: item[0].uri }} style={styles.smallImage} />
+                                                </TouchableOpacity>
+                                                <TouchableOpacity>
+                                                    <Image source={{ uri: item[1].uri }} style={styles.smallImage} />
+                                                </TouchableOpacity>
                                             </View>
                                             <View style={styles.smallRow}>
-                                                <Image source={{ uri: item[2].uri }} style={styles.smallImage} />
-                                                <Image source={{ uri: item[3].uri }} style={styles.smallImage} />
+                                                <TouchableOpacity>
+                                                    <Image source={{ uri: item[2].uri }} style={styles.smallImage} />
+                                                </TouchableOpacity>
+                                                <TouchableOpacity>
+                                                    <Image source={{ uri: item[3].uri }} style={styles.smallImage} />
+                                                </TouchableOpacity>
                                             </View>
                                         </View>
                                     </>
@@ -103,6 +130,10 @@ const RenderDataOnSearchScreen = ({ filteredData, searching }) => {
                         );
                     }}
                     showsVerticalScrollIndicator={false}
+                    initialNumToRender={3}
+                    windowSize={3}
+                    maxToRenderPerBatch={3}
+                    removeClippedSubviews={true}
                 />
             )}
         </>

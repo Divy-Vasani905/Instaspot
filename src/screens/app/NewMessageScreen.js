@@ -36,8 +36,6 @@ const NewMessageScreen = () => {
         </View>
       </View>
 
-
-
       <View style={styles.bodyContainer}>
         <FlatList
           data={filteredData}

@@ -96,7 +96,7 @@ export const reelsData = [
             username: 'chef_julia',
             profilePic: 'https://randomuser.me/api/portraits/women/45.jpg',
         },
-        videoUrl: 'https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_5mb.mp4',
+        videoUrl: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
         caption: 'Quick & easy pasta recipe 🍝✨ #FoodieLife',
         music: {
             title: 'Good Vibes',
@@ -126,7 +126,7 @@ export const reelsData = [
             username: 'chef_julia_1',
             profilePic: 'https://randomuser.me/api/portraits/women/18.jpg',
         },
-        videoUrl: 'https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_5mb.mp4',
+        videoUrl: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
         caption: 'Quick & easy pasta recipe 🍝✨ #FoodieLife',
         music: {
             title: 'Good Vibes',

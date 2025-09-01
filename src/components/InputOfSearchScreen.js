@@ -1,14 +1,22 @@
 import { StyleSheet, View, TextInput } from 'react-native'
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 
 import { COLORS } from '../constants/color'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 const InputOfSearchScreen = ({ searchText, setSearchText }) => {
+    const inputRef = useRef(null);
+    useEffect(() => {
+        setTimeout(() => {
+            inputRef.current?.focus();
+        }, 0);
+    }, [])
+
     return (
         <View style={styles.container}>
             <Icon name="search" size={20} color={COLORS.searchScreen.textColor} />
             <TextInput
+                ref={inputRef}
                 style={styles.searchInput}
                 placeholder="Search"
                 placeholderTextColor="#9d9d9dff"

@@ -8,7 +8,15 @@ const { width } = Dimensions.get("window");
 const data = ["POST", "STORY", "REEL", "LIVE"];
 const ITEM_WIDTH = 80;
 
-const CenteredTabs = ({ photoUri, pickFromGallery, cameraSideBack, setCameraSideBack, activeFor, setActiveFor }) => {
+const CenteredTabs = ({
+  photoUri,
+  pickFromGallery,
+  cameraSideBack,
+  setCameraSideBack,
+  activeFor,
+  setActiveFor,
+  galleryOpened = false,
+}) => {
   const index = data.findIndex((item) => item?.toLowerCase() === activeFor?.toLowerCase());
   const [activeIndex, setActiveIndex] = useState(index >= 0 ? index : 0);
   const flatListRef = useRef(null);
@@ -25,35 +33,56 @@ const CenteredTabs = ({ photoUri, pickFromGallery, cameraSideBack, setCameraSide
   }, [activeIndex, setActiveFor]);
 
   return (
-    <View style={{ flex: 1, backgroundColor: "black", justifyContent: "center" }}>
-      {photoUri && (
+    <View style={[
+      { flex: 1, backgroundColor: "black", justifyContent: "center" },
+      galleryOpened && { backgroundColor: 'transparent' }
+    ]}>
+      {(!galleryOpened) && (
         <TouchableOpacity onPress={pickFromGallery} style={styles.previewContainer}>
-          <Image source={{ uri: photoUri }} style={styles.preview} />
+          {(photoUri && photoUri !== '') ? (
+            <Image source={{ uri: photoUri }} style={styles.preview} />
+          ) : (
+            <View style={[styles.preview, { backgroundColor: "#000" }]} />
+          )}
         </TouchableOpacity>
       )}
 
-      <TouchableOpacity onPress={() => { setCameraSideBack(!cameraSideBack) }} style={styles.cameraSideContainer}>
-        <Image source={repeat} style={styles.repeatPreview} />
-      </TouchableOpacity>
+      {
+        (cameraSideBack || !cameraSideBack) && !galleryOpened && (
+          <TouchableOpacity
+            onPress={() => { setCameraSideBack(!cameraSideBack) }}
+            style={styles.cameraSideContainer}
+          >
+            <Image source={repeat} style={styles.repeatPreview} />
+          </TouchableOpacity>
+        )
+      }
 
       <FlatList
         ref={flatListRef}
         data={data}
         horizontal
+        style={galleryOpened && { flex: 1, backgroundColor: '#222', paddingVertical: 5, borderRadius: 50 }}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item, index }) => {
           const isVisible = Math.abs(activeIndex - index) <= 1;
 
           return (
-            <TouchableOpacity style={styles.item}>
+            <TouchableOpacity style={[styles.item]} onPress={() => {
+              // setActiveIndex(index);
+              // setActiveFor(item);
+              flatListRef.current?.scrollToIndex({ index, animated: true });
+            }}>
               <Text
-                style={{
+                style={[{
                   color: activeIndex === index ? "#fff" : "#ccc",
                   fontSize: 16,
                   fontWeight: activeIndex === index ? "600" : "400",
                   opacity: isVisible ? 1 : 0,
-                }}
+                },
+                !isVisible && { display: 'none' }
+                ]}
               >
                 {item}
               </Text>

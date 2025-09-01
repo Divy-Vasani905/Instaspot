@@ -32,7 +32,6 @@ const PostCard = ({ item }) => {
     const [isBookmarked, setIsBookmarked] = useState(item.isLiked);
 
     const handleLike = () => {
-        console.log("like worked")
         if (isLiked) {
             setLikes(likes - 1);
         } else {
@@ -71,15 +70,14 @@ const PostCard = ({ item }) => {
                     useNativeDriver: true,
                 }),
             ]).start();
-            setLikes(likes + 1);
-            setIsLiked(true)
+            handleLike()
         }
     }
     const doubleTap = Gesture.Tap()
         .numberOfTaps(2)
         .onStart(() => {
             console.log('Double tap detected!');
-            handleDoubleTap();
+            handleDoubleTap()
         });
 
     return (
