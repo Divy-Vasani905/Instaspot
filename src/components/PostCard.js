@@ -11,6 +11,7 @@ import Caption from './Caption';
 import { COLORS } from '../constants/color';
 import { useNavigation } from '@react-navigation/native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import { runOnJS } from 'react-native-reanimated';
 
 import CommentBottomSheet from './CommentBottomSheet';
 import ActionBottomSheet from './ActionBottomSheet';
@@ -26,6 +27,7 @@ const PostCard = ({ item }) => {
 
     const scaleAnim = useRef(new Animated.Value(0)).current;
     const scaleLikeAnim = useRef(new Animated.Value(1)).current;
+    const [tapPosition, setTapPosition] = useState({ x: 0, y: 0 });
 
     const [likes, setLikes] = useState(item.likes);
     const [isLiked, setIsLiked] = useState(item.isLiked);
@@ -75,9 +77,9 @@ const PostCard = ({ item }) => {
     }
     const doubleTap = Gesture.Tap()
         .numberOfTaps(2)
-        .onStart(() => {
-            console.log('Double tap detected!');
-            handleDoubleTap()
+        .onStart((event) => {
+            runOnJS(setTapPosition)({ x: event.x, y: event.y });
+            runOnJS(handleDoubleTap)();
         });
 
     return (
@@ -95,28 +97,7 @@ const PostCard = ({ item }) => {
                     </TouchableOpacity>
                 </View>
 
-                <View>
-                    <Image
-                        source={{ uri: item.mediaUrl }}
-                        style={{
-                            width: screenWidth,
-                            height: screenWidth / item.aspectRatio,
-                        }}
-                    />
-                    <Animated.View
-                        style={[
-                            styles.likeIconContainer,
-                            {
-                                transform: [{ scale: scaleAnim }],
-                                opacity: scaleAnim,
-                            },
-                        ]}
-                    >
-                        <FontAwesome name="heart" size={100} color="white" />
-                    </Animated.View>
-                </View>
-
-                {/* <GestureDetector gesture={doubleTap}>
+                <GestureDetector gesture={doubleTap}>
                     <View>
                         <Image
                             source={{ uri: item.mediaUrl }}
@@ -129,6 +110,8 @@ const PostCard = ({ item }) => {
                             style={[
                                 styles.likeIconContainer,
                                 {
+                                    top: tapPosition.y - 50,
+                                    left: tapPosition.x - 50,
                                     transform: [{ scale: scaleAnim }],
                                     opacity: scaleAnim,
                                 },
@@ -137,7 +120,7 @@ const PostCard = ({ item }) => {
                             <FontAwesome name="heart" size={100} color="white" />
                         </Animated.View>
                     </View>
-                </GestureDetector> */}
+                </GestureDetector>
 
                 <View style={styles.footer}>
                     <View style={styles.subFooterContainer}>
@@ -255,9 +238,5 @@ const styles = StyleSheet.create({
     },
     likeIconContainer: {
         position: 'absolute',
-        top: '50%',
-        left: '50%',
-        marginLeft: -50,
-        marginTop: -50,
     },
 });

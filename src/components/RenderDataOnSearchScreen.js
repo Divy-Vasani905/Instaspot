@@ -1,5 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import { FlashList } from '@shopify/flash-list';
+import React, { useState, useEffect } from 'react';
 import {
     View,
     StyleSheet,
@@ -8,17 +9,22 @@ import {
     Dimensions,
     Text,
     TouchableOpacity,
+    ActivityIndicator,
 } from 'react-native';
+
+import Entypo from 'react-native-vector-icons/Entypo';
 
 const { width } = Dimensions.get('window');
 const SMALL_SIZE = width / 3;
 const BIG_WIDTH = width / 3;
 const BIG_HEIGHT = SMALL_SIZE * 2 + 4;
 
-import Entypo from 'react-native-vector-icons/Entypo';
+const ITEMS_PER_PAGE = 3;
 
 const RenderDataOnSearchScreen = ({ filteredData, searching }) => {
     const navigation = useNavigation();
+    const [loading, setLoading] = useState(false);
+    const [visibleData, setVisibleData] = useState([]);
 
     const createLayoutData = (data) => {
         const layout = [];
@@ -33,43 +39,79 @@ const RenderDataOnSearchScreen = ({ filteredData, searching }) => {
 
     const groupedData = createLayoutData(filteredData);
 
+    useEffect(() => {
+        if (searching) {
+            setVisibleData(filteredData.slice(0, ITEMS_PER_PAGE));
+        } else {
+            setVisibleData(groupedData.slice(0, ITEMS_PER_PAGE));
+        }
+    }, [filteredData, searching]);
+
+    const loadMore = () => {
+        if (loading) return;
+        if (visibleData.length >= (searching ? filteredData.length : groupedData.length)) return;
+        setLoading(true);
+
+        setTimeout(() => {
+            if (searching) {
+                const start = visibleData.length;
+                const nextBatch = filteredData.slice(start, start + ITEMS_PER_PAGE);
+                setVisibleData((prev) => [...prev, ...nextBatch]);
+            } else {
+                const start = visibleData.length;
+                const nextBatch = groupedData.slice(start, start + ITEMS_PER_PAGE);
+                setVisibleData((prev) => [...prev, ...nextBatch]);
+            }
+            setLoading(false);
+        }, 500);
+    };
+
+    const renderFooter = () => {
+        if (!loading) return null;
+        return (
+            <View style={styles.loader}>
+                <ActivityIndicator size="large" color="#fff" />
+            </View>
+        );
+    };
+
     return (
         <>
-            {searching ? filteredData.length > 0 && (
+            {searching ? visibleData.length > 0 && (
                 <FlatList
-                    data={filteredData}
+                    data={visibleData}
                     keyExtractor={(_, idx) => idx.toString()}
-                    renderItem={({ item, index }) => {
-                        return (
-                            <TouchableOpacity
-                                style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10, paddingHorizontal: 10 }}
-                                onPress={() => { navigation.navigate('OthersProfileScreen', { item: item }) }}
-                            >
-                                <View>
-                                    <Image source={{ uri: item.profilePic }} style={{ width: 50, height: 50, borderRadius: 50, marginRight: 10 }} />
-                                </View>
-                                <View>
-                                    <Text style={{ color: '#fff' }}>
-                                        {item.username}
+                    renderItem={({ item }) => (
+                        <TouchableOpacity
+                            style={styles.searchRow}
+                            onPress={() => navigation.navigate('OthersProfileScreen', { item })}
+                        >
+                            <Image
+                                source={{ uri: item.profilePic }}
+                                style={styles.avatar}
+                            />
+                            <View>
+                                <Text style={{ color: '#fff' }}>{item.username}</Text>
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Text style={{ color: '#bbb' }}>{item.name}</Text>
+                                    <Entypo name="dot-single" size={20} color="#bbb" />
+                                    <Text style={{ color: '#bbb', fontSize: 12 }}>
+                                        Followed by {(item.followedBy?.slice(0, 1) || []).join(', ')}
+                                        {item.followedBy && item.followedBy.length > 1
+                                            ? ` + ${item.followedBy.length - 1} more`
+                                            : ''}
                                     </Text>
-                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                        <Text style={{ color: '#bbb' }}>{item.name}</Text>
-                                        <Entypo name="dot-single" size={20} color="#bbb" />
-                                        <Text style={{ color: '#bbb', fontSize: 12 }}>
-                                            Followed by {(item.followedBy?.slice(0, 1) || []).join(', ')}
-                                            {item.followedBy && item.followedBy.length > 1
-                                                ? ` + ${item.followedBy.length - 1} more`
-                                                : ''}
-                                        </Text>
-                                    </View>
                                 </View>
-                            </TouchableOpacity>
-                        );
-                    }}
+                            </View>
+                        </TouchableOpacity>
+                    )}
                     showsVerticalScrollIndicator={false}
+                    onEndReached={loadMore}
+                    onEndReachedThreshold={0.5}
+                    ListFooterComponent={renderFooter}
                 />
-            ) : filteredData.length > 0 && (
-                <FlatList
+            ) : visibleData.length > 0 && (
+                <FlashList
                     data={groupedData}
                     keyExtractor={(_, idx) => idx.toString()}
                     renderItem={({ item, index }) => {
@@ -130,17 +172,19 @@ const RenderDataOnSearchScreen = ({ filteredData, searching }) => {
                         );
                     }}
                     showsVerticalScrollIndicator={false}
-                    initialNumToRender={3}
-                    windowSize={3}
-                    maxToRenderPerBatch={3}
-                    removeClippedSubviews={true}
+                    // onEndReached={loadMore}
+                    // onEndReachedThreshold={0.5}
+                    // ListFooterComponent={renderFooter}
+                    contentContainerStyle={{ paddingBottom: 50 }}
+                    estimatedItemSize={350}
                 />
+
             )}
         </>
-    )
-}
+    );
+};
 
-export default RenderDataOnSearchScreen
+export default RenderDataOnSearchScreen;
 
 const styles = StyleSheet.create({
     row: {
@@ -164,4 +208,22 @@ const styles = StyleSheet.create({
         height: BIG_HEIGHT,
         margin: 1,
     },
-})
+    searchRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginVertical: 10,
+        paddingHorizontal: 10,
+    },
+    avatar: {
+        width: 50,
+        height: 50,
+        borderRadius: 50,
+        marginRight: 10,
+    },
+    loader: {
+        paddingHorizontal: 20,
+        marginTop: 10,
+        marginBottom: 30,
+        alignItems: 'center',
+    },
+});

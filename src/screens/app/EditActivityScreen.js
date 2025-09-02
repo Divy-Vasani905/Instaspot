@@ -80,8 +80,13 @@ const EditActivityScreen = ({ navigation, route }) => {
           >
             <View style={{ flex: 1 }} />
 
-            <TouchableOpacity style={{ width: 70, height: 40, backgroundColor: '#3797EF', justifyContent: 'center', alignItems: 'center', borderRadius: 50 }} onPress={() => console.log("Pressed")} >
-              <Text style={{ fontSize: 14, color: '#fff' }}>Next</Text>
+            <TouchableOpacity
+              style={{ width: 70, height: 40, backgroundColor: '#3797EF', justifyContent: 'center', alignItems: 'center', borderRadius: 50 }}
+              onPress={() => { navigation?.navigate('FinalPageOfNewPost', { photoUri }) }}
+            >
+              <Text style={{ fontSize: 14, color: '#fff' }}>
+                Next
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

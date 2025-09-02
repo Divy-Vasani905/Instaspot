@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TouchableOpacity, Animated, StyleSheet } from "react-native";
+import { View, TouchableOpacity, StyleSheet } from "react-native";
 
 const CustomSwitch = ({ small = false }) => {
     const [isOn, setIsOn] = useState(false);

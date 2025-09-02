@@ -19,7 +19,7 @@ import { useFocusEffect } from '@react-navigation/native';
 const SearchScreen = () => {
     const [searchText, setSearchText] = useState('');
     const [searching, setSearching] = useState(false);
-    const dummyData = Array.from({ length: 180 }, (_, i) => ({
+    const dummyData = Array.from({ length: 280 }, (_, i) => ({
         id: String(i + 1),
         uri: `https://picsum.photos/300?random=${i}`,
     }));

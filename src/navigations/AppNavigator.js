@@ -24,6 +24,7 @@ import Gallery from '../screens/app/Gallery';
 import NewActivityScreen from '../screens/app/NewActivityScreen';
 import EditActivityScreen from '../screens/app/EditActivityScreen';
 import CenteredTabsWithPages from '../screens/app/CenteredTabsWithPages';
+import FinalPageOfNewPost from '../screens/app/FinalPageOfNewPost';
 
 const Stack = createNativeStackNavigator();
 
@@ -33,13 +34,14 @@ const AppNavigator = () => {
             initialRouteName="Home"
             screenOptions={{ headerShown: false, orientation: 'portrait' }}
         >
-            <Stack.Screen name="CenteredTabsWithPages" component={CenteredTabsWithPages} />
-            <Stack.Screen name="Gallery" component={Gallery} />
-            <Stack.Screen name="EditActivityScreen" component={EditActivityScreen} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Register" component={RegisterScreen} />
             <Stack.Screen name="Home" component={MainTabNavigator} />
             <Stack.Screen name="NewActivityScreen" component={NewActivityScreen} />
+            <Stack.Screen name="Gallery" component={Gallery} />
+            <Stack.Screen name="CenteredTabsWithPages" component={CenteredTabsWithPages} />
+            <Stack.Screen name="EditActivityScreen" component={EditActivityScreen} />
+            <Stack.Screen name="FinalPageOfNewPost" component={FinalPageOfNewPost} />
             <Stack.Screen name="NotificationScreen" component={NotificationScreen} />
             <Stack.Screen name="MessageScreen" component={MessageScreen} />
             <Stack.Screen name="NewMessageScreen" component={NewMessageScreen} />
