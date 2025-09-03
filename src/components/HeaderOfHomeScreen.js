@@ -11,7 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 const HeaderOfHomeScreen = () => {
     const navigation = useNavigation();
     return (
-        <View style={styles.container}>
+        <View className='container flex-row justify-between items-center px-4 py-2'>
             <Text style={styles.logoText}>
                 Instagram
             </Text>
